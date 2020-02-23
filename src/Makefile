@@ -251,7 +251,7 @@ $(DEMO_SDS): A_test_sds.c zmalloc.c sds.c
 $(DEMO_LIST): A_test_list.c zmalloc.c adlist.c
 	$(REDIS_CC) -o $@ $^ $(FINAL_LIBS)
 
-$(DEMO_DICT): A_test_dict.c zmalloc.c dict.c
+$(DEMO_DICT): A_test_dict.c zmalloc.c siphash.c dict.c
 	$(REDIS_CC) -o $@ $^ $(FINAL_LIBS)
 
 # Because the jemalloc.h header is generated as a part of the jemalloc build,
