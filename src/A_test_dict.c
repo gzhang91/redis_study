@@ -3,15 +3,6 @@
 
 #define MAX_ITEMS 32
 
-void _serverAssert(char *estr, char *file, int line) {
-
-}
-
-void _serverPanic(const char *file, int line, const char *msg, ...) {
-
-}
-
-
 //--------------- test type
 typedef struct my_str_t {
 	int len;
