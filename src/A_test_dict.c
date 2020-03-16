@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include "dict.h"
+#include <stdlib.h>
+#include <string.h>
 
 #define MAX_ITEMS 32
 
@@ -46,15 +48,21 @@ void * DupValue(void *privdata, const void *obj) {
 }
 
 int CompareKey(void *privdata, const void *key1, const void *key2) {
+	(void)privdata;
+	
 	return *(const int *)key1 > *(const int *)key2;
 }
 
 void DestructKey(void *privdata, void *key) {
+	(void)privdata;
+	
 	int *key_orig = (int *)key;
 	free(key_orig);
 }
 
 void DestructValue(void *privdata, void *obj) {
+	(void)privdata;
+
 	my_str_t *orig = (my_str_t*)obj;
 	free(orig->data);
 	free(orig);
@@ -69,7 +77,7 @@ static dictType dict_type = {
 	&DestructValue
 };
 
-int main(int argc, char *argv[]) {
+int main() {
 	
 
 	dict *test_dict =  dictCreate(&dict_type, NULL);

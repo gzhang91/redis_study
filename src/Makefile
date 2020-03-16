@@ -247,7 +247,7 @@ dict-benchmark: dict.c zmalloc.c sds.c siphash.c
 	$(REDIS_CC) $(FINAL_CFLAGS) $^ -D DICT_BENCHMARK_MAIN -o $@ $(FINAL_LIBS)
 
 ## test
-REDIS_OBJ=adlist.o quicklist.o ae.o anet.o dict.o sds.o zmalloc.o lzf_c.o lzf_d.o pqsort.o zipmap.o sha1.o ziplist.o release.o networking.o util.o object.o db.o replication.o rdb.o t_string.o t_list.o t_set.o t_zset.o t_hash.o config.o aof.o pubsub.o multi.o debug.o sort.o intset.o syncio.o cluster.o crc16.o endianconv.o slowlog.o scripting.o bio.o rio.o rand.o memtest.o crc64.o bitops.o sentinel.o notify.o setproctitle.o blocked.o hyperloglog.o latency.o sparkline.o redis-check-rdb.o redis-check-aof.o geo.o lazyfree.o module.o evict.o expire.o geohash.o geohash_helper.o childinfo.o defrag.o siphash.o rax.o t_stream.o listpack.o localtime.o lolwut.o lolwut5.o
+REDIS_OBJ=
 
 $(DEMO_SDS): A_test_sds.c zmalloc.c sds.c
 	$(REDIS_CC) -o $@ $^ $(FINAL_LIBS)
@@ -255,12 +255,10 @@ $(DEMO_SDS): A_test_sds.c zmalloc.c sds.c
 $(DEMO_LIST): A_test_list.c zmalloc.c adlist.c
 	$(REDIS_CC) -o $@ $^ $(FINAL_LIBS)
 
-#$(DEMO_DICT): A_test_dict.c zmalloc.c siphash.c dict.c
-#	$(REDIS_CC) -o $@ $^ $(FINAL_LIBS)
-$(DEMO_DICT): A_test_dict.c $(REDIS_OBJ)
-	$(REDIS_LD) -o $@ $^ ../deps/hiredis/libhiredis.a ../deps/lua/src/liblua.a $(FINAL_LIBS)
-	
-$(DEMO_SKIPLIST): A_test_skiplist.c zmalloc.c sds.c dict.c t_zset.c
+$(DEMO_DICT): A_test_dict.c zmalloc.c siphash.c dict.c
+	$(REDIS_CC) -o $@ $^ $(FINAL_LIBS)
+
+$(DEMO_SKIPLIST): A_test_skiplist.c zmalloc.c A_skiplist.c sds.c
 	$(REDIS_CC) -o $@ $^ $(FINAL_LIBS)
 
 # Because the jemalloc.h header is generated as a part of the jemalloc build,

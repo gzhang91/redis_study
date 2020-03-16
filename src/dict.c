@@ -45,10 +45,11 @@
 
 #include "dict.h"
 #include "zmalloc.h"
-#ifndef DICT_BENCHMARK_MAIN
-#include "redisassert.h"
-#else
 #include <assert.h>
+
+#ifndef DICT_BENCHMARK_MAIN
+//#include "redisassert.h"
+#else
 #endif
 
 /* Using dictEnableResize() / dictDisableResize() we make possible to
