@@ -14,6 +14,11 @@ AzskiplistNode *AzslCreateNode(int level, double score, sds ele) {
 }
 
 /* Create a new skiplist. */
+/*
+创建一个skiplist
+1. 初始化有个头结点,本节点的索引指针具有最高的层数
+2. 层数初始化为1 ?
+*/
 Azskiplist *AzslCreate(void) {
     int j;
     Azskiplist *zsl;
@@ -49,6 +54,9 @@ void AzslFree(Azskiplist *zsl) {
     zfree(zsl);
 }
 
+/*
+每个新添加的节点初始化的层数,采用随机方案
+*/
 int AzslRandomLevel(void) {
     int level = 1;
     while ((random()&0xFFFF) < (AZSKIPLIST_P * 0xFFFF))
@@ -56,6 +64,13 @@ int AzslRandomLevel(void) {
     return (level<AZSKIPLIST_MAXLEVEL) ? level : AZSKIPLIST_MAXLEVEL;
 }
 
+/*
+插入的思想:
+1. 根据score和ele查找到最适合插入的地方
+2. 随机得到新节点的层数
+3. 创建新节点并为之赋值
+update和rank分别来预装新节点位置的信息
+*/
 AzskiplistNode *AzslInsert(Azskiplist *zsl, double score, sds ele) {
     AzskiplistNode *update[AZSKIPLIST_MAXLEVEL], *x;
     unsigned int rank[AZSKIPLIST_MAXLEVEL];
@@ -75,10 +90,7 @@ AzskiplistNode *AzslInsert(Azskiplist *zsl, double score, sds ele) {
         }
         update[i] = x;
     }
-    /* we assume the element is not already inside, since we allow duplicated
-     * scores, reinserting the same element should never happen since the
-     * caller of zslInsert() should test in the hash table if the element is
-     * already inside or not. */
+   
     level = AzslRandomLevel();
     if (level > zsl->level) {
         for (i = zsl->level; i < level; i++) {
@@ -132,6 +144,11 @@ void AzslDeleteNode(Azskiplist *zsl, AzskiplistNode *x, AzskiplistNode **update)
     zsl->length--;
 }
 
+/*
+1. 找到要删除节点的前一个节点
+2. 保存前一个节点的指针信息
+3. 删除节点
+*/
 int AzslDelete(Azskiplist *zsl, double score, sds ele, AzskiplistNode **node) {
     AzskiplistNode *update[AZSKIPLIST_MAXLEVEL], *x;
     int i;
