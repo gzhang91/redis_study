@@ -81,7 +81,7 @@ AzskiplistNode *AzslInsert(Azskiplist *zsl, double score, sds ele) {
     for (i = zsl->level-1; i >= 0; i--) {
         /* store rank that is crossed to reach the insert position */
         rank[i] = i == (zsl->level-1) ? 0 : rank[i+1];
-        printf("1. %d(%ld) * \n", i, rank[i]);
+        printf("1. %d(%d) * \n", i, rank[i]);
         while (x->level[i].forward &&
                 (x->level[i].forward->score < score ||
                     (x->level[i].forward->score == score &&
@@ -91,7 +91,7 @@ AzskiplistNode *AzslInsert(Azskiplist *zsl, double score, sds ele) {
             x = x->level[i].forward;
         }
 
-        printf("2. %d(%ld) $\n", i, rank[i]);
+        printf("2. %d(%d) $\n", i, rank[i]);
         update[i] = x;
     }
    
