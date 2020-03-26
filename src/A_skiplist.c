@@ -1,9 +1,10 @@
 #include "A_skiplist.h"
 #include <stdlib.h>
 #include "zmalloc.h"
+#include <stdio.h>
 
 #define AZSKIPLIST_MAXLEVEL 64 /* Should be enough for 2^64 elements */
-#define AZSKIPLIST_P 0.25      /* Skiplist P = 1/4 */
+#define AZSKIPLIST_P 0.5      /* Skiplist P = 1/4 */
 
 AzskiplistNode *AzslCreateNode(int level, double score, sds ele) {
     AzskiplistNode *zn =
@@ -80,12 +81,14 @@ AzskiplistNode *AzslInsert(Azskiplist *zsl, double score, sds ele) {
     for (i = zsl->level-1; i >= 0; i--) {
         /* store rank that is crossed to reach the insert position */
         rank[i] = i == (zsl->level-1) ? 0 : rank[i+1];
+        printf("1. %d(%ld) * \n", i, rank[i]);
         while (x->level[i].forward &&
                 (x->level[i].forward->score < score ||
                     (x->level[i].forward->score == score &&
                     sdscmp(x->level[i].forward->ele,ele) < 0)))
         {
             rank[i] += x->level[i].span;
+            printf("2. %d(%ld) $\n", i, rank[i]);
             x = x->level[i].forward;
         }
         update[i] = x;
@@ -114,6 +117,12 @@ AzskiplistNode *AzslInsert(Azskiplist *zsl, double score, sds ele) {
     for (i = level; i < zsl->level; i++) {
         update[i]->level[i].span++;
     }
+
+	printf("rank: ");
+    for (int j = 0; j < zsl->level; j++) {
+		printf("%02d ", rank[j]);
+    }
+    printf("\n");
 
     x->backward = (update[0] == zsl->header) ? NULL : update[0];
     if (x->level[0].forward)
@@ -269,5 +278,22 @@ unsigned long AzslGetRank(Azskiplist *zsl, double score, sds ele) {
         }
     }
     return 0;
+}
+
+void AzslVisit(Azskiplist *zsl) {
+	AzskiplistNode *x;
+    int i;
+
+    x = zsl->header;
+    for (i = zsl->level-1; i >= 0; i--) {
+		printf("level: %02d ", i);
+		x = zsl->header->level[i].forward;
+		while (x) {
+			printf("%6s-%.2f[%02ld]  ", x->ele, x->score, x->level[i].span);
+			
+			x = x->level[i].forward;
+		}
+		printf("\n");
+    }
 }
 

@@ -35,5 +35,6 @@ int AzslDelete(Azskiplist *zsl, double score, sds ele, AzskiplistNode **node);
 AzskiplistNode *AzslFirstInRange(Azskiplist *zsl, Azrangespec *range);
 AzskiplistNode *AzslLastInRange(Azskiplist *zsl, Azrangespec *range);
 unsigned long AzslGetRank(Azskiplist *zsl, double score, sds o);
+void AzslVisit(Azskiplist *zsl);
 
 #endif // _A_SKIPLIST_H_
