@@ -88,9 +88,10 @@ AzskiplistNode *AzslInsert(Azskiplist *zsl, double score, sds ele) {
                     sdscmp(x->level[i].forward->ele,ele) < 0)))
         {
             rank[i] += x->level[i].span;
-            printf("2. %d(%ld) $\n", i, rank[i]);
             x = x->level[i].forward;
         }
+
+        printf("2. %d(%ld) $\n", i, rank[i]);
         update[i] = x;
     }
    
