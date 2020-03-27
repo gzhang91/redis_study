@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 #define AZSKIPLIST_MAXLEVEL 64 /* Should be enough for 2^64 elements */
-#define AZSKIPLIST_P 0.5      /* Skiplist P = 1/4 */
+#define AZSKIPLIST_P 0.5      /* Skiplist P = 1/2 */
 
 AzskiplistNode *AzslCreateNode(int level, double score, sds ele) {
     AzskiplistNode *zn =
