@@ -176,8 +176,9 @@ DEMO_SDS=A_test_sds
 DEMO_LIST=A_test_list
 DEMO_DICT=A_test_dict
 DEMO_SKIPLIST=A_test_skiplist
+DEMO_ZIPLIST=A_test_ziplist
 
-all: $(REDIS_SERVER_NAME) $(REDIS_SENTINEL_NAME) $(REDIS_CLI_NAME) $(REDIS_BENCHMARK_NAME) $(REDIS_CHECK_RDB_NAME) $(REDIS_CHECK_AOF_NAME) $(DEMO_SDS) $(DEMO_LIST) $(DEMO_DICT) $(DEMO_SKIPLIST)
+all: $(REDIS_SERVER_NAME) $(REDIS_SENTINEL_NAME) $(REDIS_CLI_NAME) $(REDIS_BENCHMARK_NAME) $(REDIS_CHECK_RDB_NAME) $(REDIS_CHECK_AOF_NAME) $(DEMO_SDS) $(DEMO_LIST) $(DEMO_DICT) $(DEMO_SKIPLIST) $(DEMO_ZIPLIST)
 	@echo ""
 	@echo "Hint: It's a good idea to run 'make test' ;)"
 	@echo ""
@@ -260,6 +261,9 @@ $(DEMO_DICT): A_test_dict.c zmalloc.c siphash.c dict.c
 
 $(DEMO_SKIPLIST): A_test_skiplist.c zmalloc.c A_skiplist.c sds.c
 	$(REDIS_CC) -o $@ $^ $(FINAL_LIBS)
+
+$(DEMO_ZIPLIST): A_test_ziplist.c zmalloc.c sha1.c  sds.c util.c ziplist.c
+	$(REDIS_CC) -g -O0 -o $@ $^ $(FINAL_LIBS)
 
 # Because the jemalloc.h header is generated as a part of the jemalloc build,
 # building it should complete before building any other object. Instead of
